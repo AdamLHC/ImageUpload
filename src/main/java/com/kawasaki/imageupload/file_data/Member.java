@@ -30,7 +30,7 @@ public class Member {
     @JsonManagedReference
     private List<Submission> submissions;
 
-    public Member(String nickName, String userName, String notes) {
+    public Member(String userName,String nickName, String notes) {
         this.nickName = nickName;
         this.userName = userName;
         this.notes = notes;
