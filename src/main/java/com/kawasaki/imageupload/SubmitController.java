@@ -34,7 +34,7 @@ public class SubmitController {
 
     @GetMapping("/owned")
     public ResponseEntity<Iterable<Submission>> getCurrentUserSubmission(Authentication authentication) {
-        var member = memberRepository.findByUserNameIs(authentication.getName()).orElse(null);
+        var member = memberRepository.findByUserNameIs(authentication.getName()).orElse(null); // TODO: shrink null check into one line
         if (member == null) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }

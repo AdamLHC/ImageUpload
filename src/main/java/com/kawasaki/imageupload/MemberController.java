@@ -14,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 
 @RestController
@@ -27,9 +28,9 @@ public class MemberController {
     @Autowired
     private UserRepository userRepository;
 
+    @Transactional
     @PostMapping
     public ResponseEntity<Member> addMember(@RequestBody UserDTO userData) {
-        //userManager.createUser(new User(userData.getUserName(), pwEncoder.encode(userData.getPassWord()), new ArrayList<GrantedAuthority>()));
         userRepository.save(new User(userData.getUserName(), pwEncoder.encode(userData.getPassWord())));
         memberRepository.save(new Member(userData.getUserName(), userData.getNickName(), ""));
 
