@@ -42,20 +42,23 @@ public class SubmitController {
         return new ResponseEntity<Iterable<Submission>>(member.getSubmissions(), HttpStatus.OK);
     }
 
-    @PostMapping("/{title}/{description}")  //TODO: refactor variables to better variable format
+    @PostMapping
     public ResponseEntity<Submission> addSubmission(
-            @PathVariable String title, @PathVariable String description, @RequestParam("file") MultipartFile file, Authentication authentication) throws IOException {
+            @RequestParam("title") String title, @RequestParam("desc") String description, @RequestParam("file") MultipartFile file, Authentication authentication) throws IOException {
+
         var member = memberRepository.findByUserNameIs(authentication.getName()).orElse(null);
         if (member == null) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
-        Submission submission = new Submission();
-        submission.setTitle(title);
-        submission.setDescriptive(description);
-        submission.setUploader(member);
-        submission.setUploadDate(new Date(System.currentTimeMillis()));
-        submission.setFileKey(gridFsTemplate.store(file.getInputStream(),file.getOriginalFilename(),file.getContentType(),null).toHexString()); // Upload here
+        Submission submission = new Submission(
+                title,
+                description,
+                member,
+                new Date(System.currentTimeMillis()),
+                gridFsTemplate.store(file.getInputStream(), file.getOriginalFilename(), file.getContentType(), null).toHexString()
+        );
+
         submissionRepository.save(submission);
 
         return new ResponseEntity<Submission>(submissionRepository.findByFileKey(submission.getFileKey()).orElse(null), HttpStatus.OK);

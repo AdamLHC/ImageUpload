@@ -1,5 +1,6 @@
 package com.kawasaki.imageupload.security;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -19,9 +20,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final PasswordEncoder pwEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 
+    @Autowired
+    private DBUserDetailService userDetailService;
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(authentication());
+        auth.userDetailsService(userDetailService);
     }
 
     @Override
@@ -32,17 +36,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .mvcMatchers(HttpMethod.POST,"/submission/**").authenticated()
                 .and().httpBasic()
                 .and().csrf().disable(); //Disabling this because this app is a web api, and it interferes with post request.
-
     }
 
-    @Bean
-    InMemoryUserDetailsManager authentication() {
-        UserDetails user = User.builder()
-                .username("user")
-                .password(pwEncoder.encode("password"))
-                .roles("USER")
-                .build();
+//    @Bean
+//    InMemoryUserDetailsManager authentication() {
+//        UserDetails user = User.builder()
+//                .username("user")
+//                .password(pwEncoder.encode("password"))
+//                .roles("USER")
+//                .build();
+//
+//        return new InMemoryUserDetailsManager(user);
+//    }
 
-        return new InMemoryUserDetailsManager(user);
-    }
+
 }
