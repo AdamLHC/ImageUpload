@@ -1,5 +1,6 @@
 package com.kawasaki.imageupload.security;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.sun.istack.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,7 +8,10 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
 
 @Data
 @Entity
@@ -29,28 +33,41 @@ public class User implements UserDetails {
         this.password = password;
     }
 
+    private Boolean accountExpired = false;
+
+    private Boolean accountLocked = false;
+
+    private Boolean credentialsExpired = false;
+
+    private Boolean accountEnabled = true;
+
+    @OneToMany
+    @JoinColumn(name = "user_id")
+    @JsonManagedReference
+    private Set<Role> roles;
+
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
-    } // TODO: Implement proper role store
+    public Collection<Role> getAuthorities() {
+        return roles;
+    }
 
     @Override
     public boolean isAccountNonExpired() {
-        return true;
+        return !accountExpired;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return !accountLocked;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return true;
+        return !accountExpired;
     }
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return accountEnabled;
     }
 }

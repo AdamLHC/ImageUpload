@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -27,19 +29,19 @@ public class Member {
     @Nullable
     private String introduction;
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
-    private Collection<MemberAttribute> attributes;
+    @OneToMany
+    @JoinColumn(name = "member_id")
+    private Set<MemberAttribute> attributes;
     // Gender, Orientations, Age, Occupations etc...
 
     @OneToMany(mappedBy = "uploader", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<Submission> submissions;
 
-    @ManyToMany
+    @OneToMany
     private Collection<SubmissionTag> subscribedTags;
 
-    public Member(String userName,String nickName, String introduction) {
+    public Member(String userName, String nickName, String introduction) {
         this.nickName = nickName;
         this.userName = userName;
         this.introduction = introduction;

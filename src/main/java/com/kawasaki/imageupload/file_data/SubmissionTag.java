@@ -1,5 +1,7 @@
 package com.kawasaki.imageupload.file_data;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.istack.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,10 +20,4 @@ public class SubmissionTag {
 
     @NotNull
     String Name;
-
-    @ManyToMany
-    Collection<Submission> relatedSubmissions;
-
-    @ManyToMany
-    Collection<Member> subscribers;
 }

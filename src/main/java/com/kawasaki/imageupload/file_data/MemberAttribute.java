@@ -19,9 +19,4 @@ public class MemberAttribute {
     private String name;
 
     private String value;
-
-    @ManyToOne
-    @JoinColumn(name = "member_id", nullable = false)
-    @JsonBackReference
-    private Member member;
 }

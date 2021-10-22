@@ -1,7 +1,6 @@
 package com.kawasaki.imageupload;
 
 import com.kawasaki.imageupload.file_data.Member;
-import com.kawasaki.imageupload.file_data.MemberAttribute;
 import com.kawasaki.imageupload.file_data.MemberRepository;
 import com.kawasaki.imageupload.security.User;
 import com.kawasaki.imageupload.security.UserDTO;
@@ -10,14 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 
 @RestController
 @RequestMapping("/member")
