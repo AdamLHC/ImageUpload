@@ -1,7 +1,6 @@
 package com.kawasaki.imageupload.file_data;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -34,7 +33,7 @@ public class Submission {
     private Member uploader;
 
     @OneToMany
-    private Collection<SubmissionTag> tags;
+    private Collection<Tag> tags;
 
     public Submission(String title, String description, Member member, Date date, String fileKey) {
         this.title = title;

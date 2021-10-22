@@ -14,7 +14,7 @@ import java.util.Collection;
 @NoArgsConstructor
 @Data
 @Entity
-public class SubmissionTag {
+public class Tag {
     @Id
     Long Id;
 

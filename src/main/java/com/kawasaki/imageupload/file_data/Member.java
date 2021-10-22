@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 @AllArgsConstructor
@@ -39,7 +38,7 @@ public class Member {
     private List<Submission> submissions;
 
     @OneToMany
-    private Collection<SubmissionTag> subscribedTags;
+    private Collection<Tag> subscribedTags;
 
     public Member(String userName, String nickName, String introduction) {
         this.nickName = nickName;
