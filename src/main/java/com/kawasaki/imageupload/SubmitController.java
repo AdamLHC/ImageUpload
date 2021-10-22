@@ -4,6 +4,7 @@ import com.kawasaki.imageupload.file_data.MemberRepository;
 import com.kawasaki.imageupload.file_data.Submission;
 import com.kawasaki.imageupload.file_data.SubmissionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.awt.print.Pageable;
 import java.io.IOException;
 import java.util.Date;
 
@@ -40,6 +42,16 @@ public class SubmitController {
         }
 
         return new ResponseEntity<Iterable<Submission>>(member.getSubmissions(), HttpStatus.OK);
+    }
+
+    @GetMapping("/subscribed")
+    public ResponseEntity<Iterable<Submission>> getSubscribedFeed(Authentication authentication){
+        var member = memberRepository.findByUserNameIs(authentication.getName()).orElse(null); // TODO: shrink null check into one line
+        if (member == null) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        return new ResponseEntity<Iterable<Submission>>(submissionRepository.findByByRelatedTags(member.getSubscribedTags(), (Pageable)PageRequest.of(0,10)),HttpStatus.OK);
     }
 
     @PostMapping
