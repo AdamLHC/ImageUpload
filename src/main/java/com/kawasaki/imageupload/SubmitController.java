@@ -51,7 +51,7 @@ public class SubmitController {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
-        return new ResponseEntity<Iterable<Submission>>(submissionRepository.findByByRelatedTags(member.getSubscribedTags(), (Pageable)PageRequest.of(0,10)),HttpStatus.OK);
+        return new ResponseEntity<Iterable<Submission>>(submissionRepository.findByByRelatedTags(member.getSubscribedTags()/*, (Pageable)PageRequest.of(0,10)*/),HttpStatus.OK);
     }
 
     @PostMapping

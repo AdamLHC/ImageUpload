@@ -9,6 +9,7 @@ import java.util.Collection;
 
 @NoArgsConstructor
 @Entity
+@Table(name = "UserRoles")
 public class Role implements GrantedAuthority {
 
     @Id
