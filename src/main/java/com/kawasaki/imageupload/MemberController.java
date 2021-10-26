@@ -35,6 +35,16 @@ public class MemberController {
         return new ResponseEntity<Member>(memberRepository.findByUserNameIs(userData.getUserName()).orElse(null), HttpStatus.OK); //TODO: proper database error handling
     }
 
+    @GetMapping
+    public ResponseEntity<Member> getProfile(Authentication authentication){
+        var userData = memberRepository.findByUserNameIs(authentication.getName()).orElse(null);
+        if (userData == null) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        return new ResponseEntity<Member>(memberRepository.findByUserNameIs(userData.getUserName()).orElse(null),HttpStatus.OK);
+    }
+
     @PutMapping
     public ResponseEntity<Member> updateProfile(@RequestBody Member member, Authentication authentication){ //TODO: make memberDTO that don't have ID or submissions
         var oldData = memberRepository.findByUserNameIs(authentication.getName()).orElse(null);

@@ -37,7 +37,7 @@ public class Member {
     @JsonManagedReference
     private List<Submission> submissions;
 
-    @OneToMany
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST}) //not removing entry in tag table.
     private Collection<Tag> subscribedTags;
 
     public Member(String userName, String nickName, String introduction) {
@@ -48,5 +48,13 @@ public class Member {
 
     public void addSubmission(Submission submission) {
         this.submissions.add(submission);
+    }
+
+    public void addSubscribedTag(Tag tag) {
+        this.subscribedTags.add(tag);
+    }
+
+    public void removeSubscribedTag(Tag tag) {
+        this.subscribedTags.remove(tag);
     }
 }

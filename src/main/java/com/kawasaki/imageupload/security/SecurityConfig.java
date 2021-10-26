@@ -32,9 +32,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
+                .mvcMatchers(HttpMethod.GET,"/member").authenticated()
+                .mvcMatchers(HttpMethod.PUT,"/member").authenticated()
                 .mvcMatchers("/submission/owned").authenticated()
                 .mvcMatchers("/submission/subscribed").authenticated()
                 .mvcMatchers(HttpMethod.POST,"/submission/**").authenticated()
+                .mvcMatchers("/subscribe").authenticated()
                 .and().httpBasic()
                 .and().csrf().disable(); //Disabling this because this app is a web api, and it interferes with post request.
     }

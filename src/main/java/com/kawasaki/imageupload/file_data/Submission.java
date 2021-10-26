@@ -32,7 +32,7 @@ public class Submission {
     @JsonBackReference
     private Member uploader;
 
-    @OneToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     private Collection<Tag> tags;
 
     public Submission(String title, String description, Member member, Date date, String fileKey) {

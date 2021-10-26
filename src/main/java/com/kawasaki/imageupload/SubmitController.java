@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.awt.print.Pageable;
 import java.io.IOException;
 import java.util.Date;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/submission")
@@ -51,12 +52,12 @@ public class SubmitController {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
-        return new ResponseEntity<Iterable<Submission>>(submissionRepository.findByByRelatedTags(member.getSubscribedTags()/*, (Pageable)PageRequest.of(0,10)*/),HttpStatus.OK);
+        return new ResponseEntity<Iterable<Submission>>(submissionRepository.findByByRelatedTags(member.getSubscribedTags().stream().map(t -> t.getName()).collect(Collectors.toList())/*, (Pageable)PageRequest.of(0,10)*/),HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<Submission> addSubmission(
-            @RequestParam("title") String title, @RequestParam("desc") String description, @RequestParam("file") MultipartFile file, Authentication authentication) throws IOException {
+    public ResponseEntity<Submission> addSubmission(@RequestParam MultipartFile file,
+            @RequestParam String title, @RequestParam String description, Authentication authentication) throws IOException {
 
         var member = memberRepository.findByUserNameIs(authentication.getName()).orElse(null);
         if (member == null) {

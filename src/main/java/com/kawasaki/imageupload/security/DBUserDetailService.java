@@ -1,10 +1,13 @@
 package com.kawasaki.imageupload.security;
 
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.io.Console;
 
 @Service
 public class DBUserDetailService implements UserDetailsService {

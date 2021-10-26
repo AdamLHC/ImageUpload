@@ -13,6 +13,6 @@ public interface SubmissionRepository extends JpaRepository<Submission, Number> 
 
     public Optional<Submission> findByFileKey(String filekey);
 
-    @Query(value = "SELECT s FROM Submission s JOIN s.tags t WHERE t.Name IN :tags Order By s.uploadDate")
-    public Iterable<Submission> findByByRelatedTags(Collection<Tag> tags);
+    @Query(value = "SELECT s FROM Submission s INNER JOIN s.tags t WHERE t.name IN :tags Order By s.uploadDate")
+    public Iterable<Submission> findByByRelatedTags(Collection<String> tags);
 }

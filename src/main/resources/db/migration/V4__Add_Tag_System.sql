@@ -8,10 +8,15 @@ CREATE TABLE member_attribute (
 
 CREATE TABLE member_subscribed_tags (
   member_id INT NOT NULL,
-  subscribed_tags_id BIGINT NOT NULL
+  subscribed_tags_id BIGINT NOT NULL,
+  CONSTRAINT pk_member_subscribedtags PRIMARY KEY (member_id, subscribed_tags_id)
 );
 
-CREATE TABLE submission_tags (submission_id INT NOT NULL, tags_id BIGINT NOT NULL);
+CREATE TABLE submission_tags (
+  submission_id INT NOT NULL,
+  tags_id BIGINT NOT NULL,
+  CONSTRAINT pk_submission_tags PRIMARY KEY (submission_id, tags_id)
+);
 
 CREATE TABLE tag (
   id BIGINT NOT NULL,
@@ -23,7 +28,7 @@ CREATE TABLE user_roles (
   id BIGINT NOT NULL,
   name VARCHAR(255) NULL,
   user_id BIGINT NULL,
-  CONSTRAINT pk_userroles PRIMARY KEY (id)
+  CONSTRAINT pk_user_roles PRIMARY KEY (id)
 );
 
 ALTER TABLE user ADD account_enabled BIT(1) NULL;
@@ -36,13 +41,9 @@ ALTER TABLE user ADD credentials_expired BIT(1) NULL;
 
 ALTER TABLE member ADD introduction VARCHAR(255) NULL;
 
-ALTER TABLE member_subscribed_tags ADD CONSTRAINT uc_member_subscribed_tags_subscribedtags UNIQUE (subscribed_tags_id);
-
-ALTER TABLE submission_tags ADD CONSTRAINT uc_submission_tags_tags UNIQUE (tags_id);
-
 ALTER TABLE member_attribute ADD CONSTRAINT FK_MEMBERATTRIBUTE_ON_MEMBER FOREIGN KEY (member_id) REFERENCES member (id);
 
-ALTER TABLE user_roles ADD CONSTRAINT FK_USERROLES_ON_USER FOREIGN KEY (user_id) REFERENCES user (id);
+ALTER TABLE user_roles ADD CONSTRAINT FK_USER_ROLES_ON_USER FOREIGN KEY (user_id) REFERENCES user (id);
 
 ALTER TABLE member_subscribed_tags ADD CONSTRAINT fk_memsubtag_on_member FOREIGN KEY (member_id) REFERENCES member (id);
 
