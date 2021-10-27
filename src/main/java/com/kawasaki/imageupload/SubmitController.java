@@ -1,8 +1,6 @@
 package com.kawasaki.imageupload;
 
-import com.kawasaki.imageupload.file_data.MemberRepository;
-import com.kawasaki.imageupload.file_data.Submission;
-import com.kawasaki.imageupload.file_data.SubmissionRepository;
+import com.kawasaki.imageupload.file_data.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
@@ -15,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.awt.print.Pageable;
 import java.io.IOException;
 import java.util.Date;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
@@ -29,6 +28,8 @@ public class SubmitController {
     @Autowired
     private SubmissionRepository submissionRepository;
 
+    @Autowired
+    private TagRepository tagRepository;
 
     @GetMapping
     public Iterable<Submission> getAllSubmissions() {
@@ -56,9 +57,7 @@ public class SubmitController {
     }
 
     @PostMapping
-    public ResponseEntity<Submission> addSubmission(@RequestParam MultipartFile file,
-            @RequestParam String title, @RequestParam String description, Authentication authentication) throws IOException {
-
+    public ResponseEntity<Submission> addSubmission(@RequestParam MultipartFile file, @RequestParam String title, @RequestParam String description, @RequestParam(required = false) Set<String> tags, Authentication authentication) throws IOException {
         var member = memberRepository.findByUserNameIs(authentication.getName()).orElse(null);
         if (member == null) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
@@ -69,11 +68,11 @@ public class SubmitController {
                 description,
                 member,
                 new Date(System.currentTimeMillis()),
-                gridFsTemplate.store(file.getInputStream(), file.getOriginalFilename(), file.getContentType(), null).toHexString()
+                gridFsTemplate.store(file.getInputStream(), file.getOriginalFilename(), file.getContentType(), null).toHexString(),
+                tags.stream().map(t -> tagRepository.findByName(t).orElse(new Tag(t))).collect(Collectors.toList()) //TODO: Batch processing and not repeating call to database
         );
 
         submissionRepository.save(submission);
-
         return new ResponseEntity<Submission>(submissionRepository.findByFileKey(submission.getFileKey()).orElse(null), HttpStatus.OK);
     }
 }

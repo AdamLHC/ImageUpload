@@ -32,14 +32,15 @@ public class Submission {
     @JsonBackReference
     private Member uploader;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     private Collection<Tag> tags;
 
-    public Submission(String title, String description, Member member, Date date, String fileKey) {
+    public Submission(String title, String description, Member member, Date date, String fileKey,Collection<Tag> tags) {
         this.title = title;
         this.descriptive = description;
         this.uploader = member;
         this.uploadDate = date;
         this.fileKey = fileKey;
+        this.tags = tags;
     }
 }
