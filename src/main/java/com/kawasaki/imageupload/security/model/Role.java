@@ -1,4 +1,4 @@
-package com.kawasaki.imageupload.security;
+package com.kawasaki.imageupload.security.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.NoArgsConstructor;

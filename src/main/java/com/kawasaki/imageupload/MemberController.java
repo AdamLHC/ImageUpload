@@ -1,9 +1,9 @@
 package com.kawasaki.imageupload;
 
-import com.kawasaki.imageupload.file_data.Member;
+import com.kawasaki.imageupload.file_data.model.Member;
 import com.kawasaki.imageupload.file_data.MemberRepository;
-import com.kawasaki.imageupload.security.User;
-import com.kawasaki.imageupload.security.UserDTO;
+import com.kawasaki.imageupload.security.model.User;
+import com.kawasaki.imageupload.security.model.UserDTO;
 import com.kawasaki.imageupload.security.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

@@ -1,13 +1,13 @@
-package com.kawasaki.imageupload.file_data;
+package com.kawasaki.imageupload.file_data.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.kawasaki.imageupload.file_data.MemberAttribute;
 import com.mongodb.lang.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -28,17 +28,14 @@ public class Member {
     @Nullable
     private String introduction;
 
-    @OneToMany
-    @JoinColumn(name = "member_id")
+    @ElementCollection
+    @CollectionTable(name = "member_attribute",joinColumns = @JoinColumn(name = "member_id"))
     private Set<MemberAttribute> attributes;
     // Gender, Orientations, Age, Occupations etc...
 
     @OneToMany(mappedBy = "uploader", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<Submission> submissions;
-
-    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST}) //not removing entry in tag table.
-    private Collection<Tag> subscribedTags;
 
     public Member(String userName, String nickName, String introduction) {
         this.nickName = nickName;
@@ -48,13 +45,5 @@ public class Member {
 
     public void addSubmission(Submission submission) {
         this.submissions.add(submission);
-    }
-
-    public void addSubscribedTag(Tag tag) {
-        this.subscribedTags.add(tag);
-    }
-
-    public void removeSubscribedTag(Tag tag) {
-        this.subscribedTags.remove(tag);
     }
 }

@@ -1,4 +1,4 @@
-package com.kawasaki.imageupload.file_data;
+package com.kawasaki.imageupload.file_data.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
@@ -6,8 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.Collection;
 import java.util.Date;
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -32,10 +32,12 @@ public class Submission {
     @JsonBackReference
     private Member uploader;
 
-    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    private Collection<Tag> tags;
+    @ElementCollection
+    @CollectionTable(name = "submission_tags",joinColumns = @JoinColumn(name = "submission_id"))
+    @Column(name = "tag")
+    private Set<String> tags;
 
-    public Submission(String title, String description, Member member, Date date, String fileKey,Collection<Tag> tags) {
+    public Submission(String title, String description, Member member, Date date, String fileKey,Set<String> tags) {
         this.title = title;
         this.descriptive = description;
         this.uploader = member;

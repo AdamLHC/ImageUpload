@@ -1,8 +1,9 @@
 package com.kawasaki.imageupload;
 
 import com.kawasaki.imageupload.file_data.*;
+import com.kawasaki.imageupload.file_data.model.Submission;
+import com.kawasaki.imageupload.subscribe.SubscriberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,11 +11,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.awt.print.Pageable;
 import java.io.IOException;
 import java.util.Date;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/submission")
@@ -29,7 +28,7 @@ public class SubmitController {
     private SubmissionRepository submissionRepository;
 
     @Autowired
-    private TagRepository tagRepository;
+    private SubscriberRepository subscriberRepository;
 
     @GetMapping
     public Iterable<Submission> getAllSubmissions() {
@@ -48,12 +47,12 @@ public class SubmitController {
 
     @GetMapping("/subscribed")
     public ResponseEntity<Iterable<Submission>> getSubscribedFeed(Authentication authentication){
-        var member = memberRepository.findByUserNameIs(authentication.getName()).orElse(null); // TODO: shrink null check into one line
-        if (member == null) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        var subscribeProfile = subscriberRepository.findByUsername(authentication.getName()).orElse(null); // TODO: shrink null check into one line
+        if (subscribeProfile == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity<Iterable<Submission>>(submissionRepository.findByByRelatedTags(member.getSubscribedTags().stream().map(t -> t.getName()).collect(Collectors.toList())/*, (Pageable)PageRequest.of(0,10)*/),HttpStatus.OK);
+        return new ResponseEntity<Iterable<Submission>>(submissionRepository.findByByRelatedTags(subscribeProfile.getSubscribedTags()),HttpStatus.OK);
     }
 
     @PostMapping
@@ -69,7 +68,7 @@ public class SubmitController {
                 member,
                 new Date(System.currentTimeMillis()),
                 gridFsTemplate.store(file.getInputStream(), file.getOriginalFilename(), file.getContentType(), null).toHexString(),
-                tags.stream().map(t -> tagRepository.findByName(t).orElse(new Tag(t))).collect(Collectors.toList()) //TODO: Batch processing and not repeating call to database
+                tags
         );
 
         submissionRepository.save(submission);
