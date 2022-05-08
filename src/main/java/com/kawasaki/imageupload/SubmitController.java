@@ -35,6 +35,11 @@ public class SubmitController {
         return submissionRepository.findAll();
     }
 
+    @GetMapping("/userid/{userId}")
+    public Iterable<Submission> getUserSubmissionsById(@PathVariable Integer userId){
+        return submissionRepository.findByuploaderId(userId);
+    }
+
     @GetMapping("/owned")
     public ResponseEntity<Iterable<Submission>> getCurrentUserSubmission(Authentication authentication) {
         var member = memberRepository.findByUserNameIs(authentication.getName()).orElse(null); // TODO: shrink null check into one line
@@ -42,7 +47,7 @@ public class SubmitController {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
-        return new ResponseEntity<Iterable<Submission>>(member.getSubmissions(), HttpStatus.OK);
+        return new ResponseEntity<>(member.getSubmissions(), HttpStatus.OK);
     }
 
     @GetMapping("/subscribed")
@@ -52,7 +57,7 @@ public class SubmitController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity<Iterable<Submission>>(submissionRepository.findByByRelatedTags(subscribeProfile.getSubscribedTags()),HttpStatus.OK);
+        return new ResponseEntity<>(submissionRepository.findByRelatedTags(subscribeProfile.getSubscribedTags()), HttpStatus.OK);
     }
 
     @PostMapping
@@ -72,6 +77,6 @@ public class SubmitController {
         );
 
         submissionRepository.save(submission);
-        return new ResponseEntity<Submission>(submissionRepository.findByFileKey(submission.getFileKey()).orElse(null), HttpStatus.OK);
+        return new ResponseEntity<>(submissionRepository.findByFileKey(submission.getFileKey()).orElse(null), HttpStatus.OK);
     }
 }

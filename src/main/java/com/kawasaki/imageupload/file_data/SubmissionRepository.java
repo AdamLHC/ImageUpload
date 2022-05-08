@@ -9,8 +9,10 @@ import java.util.Set;
 
 public interface SubmissionRepository extends JpaRepository<Submission, Number> {
 
-    public Optional<Submission> findByFileKey(String filekey);
+    Optional<Submission> findByFileKey(String filekey);
 
     @Query(value = "SELECT s FROM Submission s INNER JOIN s.tags t WHERE t IN :tags Order By s.uploadDate")
-    public Iterable<Submission> findByByRelatedTags(Set<String> tags);
+    Iterable<Submission> findByRelatedTags(Set<String> tags);
+
+    Iterable<Submission> findByuploaderId(Integer Id);
 }
