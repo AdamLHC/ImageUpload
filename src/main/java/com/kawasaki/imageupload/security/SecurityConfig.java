@@ -13,6 +13,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @EnableWebSecurity
@@ -42,14 +44,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().csrf().disable(); //Disabling this because this app is a web api, and it interferes with post request.
     }
 
-//    @Bean
-//    InMemoryUserDetailsManager authentication() {
-//        UserDetails user = User.builder()
-//                .username("user")
-//                .password(pwEncoder.encode("password"))
-//                .roles("USER")
-//                .build();
-//
-//        return new InMemoryUserDetailsManager(user);
-//    }
+    @Bean
+    public WebMvcConfigurer CORSConfiguration(){
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**").allowedOrigins("*");
+            }
+        };
+    }
 }
