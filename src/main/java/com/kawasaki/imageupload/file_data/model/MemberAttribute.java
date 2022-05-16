@@ -1,4 +1,4 @@
-package com.kawasaki.imageupload.file_data;
+package com.kawasaki.imageupload.file_data.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;

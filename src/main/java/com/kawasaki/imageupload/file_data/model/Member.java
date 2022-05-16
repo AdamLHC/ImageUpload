@@ -1,7 +1,6 @@
 package com.kawasaki.imageupload.file_data.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.kawasaki.imageupload.file_data.MemberAttribute;
 import com.mongodb.lang.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
