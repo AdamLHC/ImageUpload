@@ -14,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
+import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("/member")
@@ -29,6 +30,10 @@ public class MemberController {
     @Transactional
     @PostMapping
     public ResponseEntity<Member> addMember(@RequestBody UserDTO userData) {
+        if (memberRepository.findByUserNameIs(userData.getUserName()).isPresent()) {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
+
         userRepository.save(new User(userData.getUserName(), pwEncoder.encode(userData.getPassWord())));
         memberRepository.save(new Member(userData.getUserName(), userData.getNickName(), ""));
 
@@ -48,7 +53,7 @@ public class MemberController {
     @PutMapping
     public ResponseEntity<Member> updateProfile(@RequestBody Member member, Authentication authentication){ //TODO: make memberDTO that don't have ID or submissions
         var oldData = memberRepository.findByUserNameIs(authentication.getName()).orElse(null);
-        if (member == null) {
+        if (oldData == null) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
