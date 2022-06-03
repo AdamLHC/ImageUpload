@@ -4,6 +4,7 @@ import com.kawasaki.imageupload.file_data.*;
 import com.kawasaki.imageupload.file_data.model.Submission;
 import com.kawasaki.imageupload.subscribe.SubscriberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +34,11 @@ public class SubmitController {
     @GetMapping
     public Iterable<Submission> getAllSubmissions() {
         return submissionRepository.findAll();
+    }
+
+    @GetMapping(params = {"page","size"})
+    public Iterable<Submission> getAllSubmissionPaged(@RequestParam("page") Integer page,@RequestParam("size") Integer size){
+        return submissionRepository.findAll(PageRequest.of(page, size));
     }
 
     @GetMapping("/userid/{userId}")
